@@ -610,18 +610,21 @@ public class Mail.ComposerWidget : Gtk.Grid {
                         }
                     }
 
-                    string when = new DateTime.from_unix_utc (info.date_received).format (date_format);
-                    string who = Utils.escape_html_tags (message.get_from ().format ());
-                    message_content += _("On %1$s, %2$s wrote:").printf (when, who);
-                    message_content += "<br/>";
-                    message_content += "<blockquote type=\"cite\">%s</blockquote>".printf (content_to_quote);
+                    message_content += "<div style=\"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0 0 0\">";
+                    message_content += "<p class=\"MsoNormal\">";
+                    message_content += _("From: %s<br/>").printf (Utils.escape_html_tags (message.get_from ().format ()));
+                    message_content += _("Date: %s<br/>").printf (new DateTime.from_unix_utc (info.date_received).format (date_format));
+                    message_content += _("To: %s<br/>").printf (Utils.escape_html_tags (info.to));
+                    message_content += _("Subject: %s<br/>").printf (Utils.escape_html_tags (info.subject));
+                    message_content += "</p></div><br/>";
+                    message_content += "%s".printf (content_to_quote);
                 } else if (type == Type.FORWARD) {
                     message_content += _("---------- Forwarded message ----------");
                     message_content += "<br/><br/>";
                     message_content += _("From: %s<br/>").printf (Utils.escape_html_tags (message.get_from ().format ()));
-                    message_content += _("Subject: %s<br/>").printf (Utils.escape_html_tags (info.subject));
                     message_content += _("Date: %s<br/>").printf (new DateTime.from_unix_utc (info.date_received).format (date_format));
                     message_content += _("To: %s<br/>").printf (Utils.escape_html_tags (info.to));
+                    message_content += _("Subject: %s<br/>").printf (Utils.escape_html_tags (info.subject));
                     if (info.cc != null && info.cc != "") {
                         message_content += _("Cc: %s<br/>").printf (Utils.escape_html_tags (info.cc));
                     }
